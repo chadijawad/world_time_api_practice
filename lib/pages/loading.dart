@@ -13,6 +13,8 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
+  // bool? isDay;
+  late bool isDay;
   getData() async {
     Response response = await get(
         Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Beirut'));
@@ -20,10 +22,18 @@ class _LoadingState extends State<Loading> {
     DateTime dateTime = DateTime.parse(recivedData['utc_datetime']);
     int offset = int.parse(recivedData['utc_offset'].substring(0, 3));
     DateTime time = dateTime.add(Duration(hours: offset));
+    if (time.hour > 5 && time.hour < 18) {
+      isDay = true;
+    } else {
+      isDay = false;
+    }
     String formatedTime = DateFormat('hh:mm a').format(time);
     String timezone = recivedData['timezone'];
-    Navigator.pushReplacementNamed(context, '/home',
-        arguments: {'time': formatedTime, 'timezone': timezone});
+    Navigator.pushReplacementNamed(context, '/home', arguments: {
+      'time': formatedTime,
+      'timezone': timezone,
+      "isDay": isDay,
+    });
     // print(formatedTime);
     // print(timezone);
   }

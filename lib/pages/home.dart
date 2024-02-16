@@ -11,12 +11,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Map recivedData = ModalRoute.of(context)!.settings.arguments as Map;
+    String bgImage =recivedData['isDay']?'day.png':'night.png';
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('assets/day.png'), fit: BoxFit.cover),
-            color: Color.fromARGB(164, 77, 74, 74)),
+                image: AssetImage('assets/$bgImage'), fit: BoxFit.cover),
+            color: const Color.fromARGB(164, 77, 74, 74)),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
