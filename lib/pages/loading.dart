@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
+import 'package:world_time_app/classes/get_data.dart';
 
 class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -14,25 +12,13 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
   // bool? isDay;
-  late bool isDay;
-  getData() async {
-    Response response = await get(
-        Uri.parse('http://worldtimeapi.org/api/timezone/Asia/Beirut'));
-    Map recivedData = jsonDecode(response.body);
-    DateTime dateTime = DateTime.parse(recivedData['utc_datetime']);
-    int offset = int.parse(recivedData['utc_offset'].substring(0, 3));
-    DateTime time = dateTime.add(Duration(hours: offset));
-    if (time.hour > 5 && time.hour < 18) {
-      isDay = true;
-    } else {
-      isDay = false;
-    }
-    String formatedTime = DateFormat('hh:mm a').format(time);
-    String timezone = recivedData['timezone'];
+   getDataL() async {
+    AllCountries oneCountry = AllCountries(flag:'Lebanon',countryName: 'lebanon',link:'Asia/Beirut');
+    await oneCountry.getData();
     Navigator.pushReplacementNamed(context, '/home', arguments: {
-      'time': formatedTime,
-      'timezone': timezone,
-      "isDay": isDay,
+      'time': oneCountry.formattedTime,
+      'timezone': oneCountry.timezone,
+      "isDay": oneCountry.isDay,
     });
     // print(formatedTime);
     // print(timezone);
@@ -41,7 +27,7 @@ class _LoadingState extends State<Loading> {
   @override
   void initState() {
     // TODO: implement initState
-    getData();
+    getDataL();
     super.initState();
   }
 

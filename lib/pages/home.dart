@@ -8,13 +8,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Map recivedData = {};
   @override
   Widget build(BuildContext context) {
-    Map recivedData = ModalRoute.of(context)!.settings.arguments as Map;
-    String bgImage =recivedData['isDay']?'day.png':'night.png';
+     recivedData =recivedData.isEmpty?  ModalRoute.of(context)!.settings.arguments as Map:recivedData;
+      
+    String bgImage =
+        recivedData['isDay'] ? 'day.png' : 'night.png';
     return Scaffold(
       body: Container(
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/$bgImage'), fit: BoxFit.cover),
             color: const Color.fromARGB(164, 77, 74, 74)),
@@ -23,7 +26,17 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  dynamic result =
+                      await Navigator.pushNamed(context, '/location');
+                  setState(() {
+                    recivedData = {
+                      'time': result['time'],
+                      'isDay': result['isDay'],
+                      'timezone': result['timezone']
+                    };
+                  });
+                },
                 icon: const Icon(
                   Icons.edit_location,
                   color: Color.fromARGB(255, 255, 129, 129),
