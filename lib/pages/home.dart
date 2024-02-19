@@ -11,10 +11,11 @@ class _HomeState extends State<Home> {
   Map recivedData = {};
   @override
   Widget build(BuildContext context) {
-     recivedData =recivedData.isEmpty?  ModalRoute.of(context)!.settings.arguments as Map:recivedData;
-      
-    String bgImage =
-        recivedData['isDay'] ? 'day.png' : 'night.png';
+    recivedData = recivedData.isEmpty
+        ? ModalRoute.of(context)!.settings.arguments as Map
+        : recivedData;
+
+    String bgImage = recivedData['isDay'] ? 'day.png' : 'night.png';
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -29,12 +30,21 @@ class _HomeState extends State<Home> {
                 onPressed: () async {
                   dynamic result =
                       await Navigator.pushNamed(context, '/location');
+
                   setState(() {
-                    recivedData = {
-                      'time': result['time'],
-                      'isDay': result['isDay'],
-                      'timezone': result['timezone']
-                    };
+                    if (result == null) {
+                      recivedData = {
+                        'time': 'Please Select a Country',
+                        'isDay': false,
+                        'timezone': ''
+                      };
+                    } else {
+                      recivedData = {
+                        'time': result['time'],
+                        'isDay': result['isDay'],
+                        'timezone': result['timezone']
+                      };
+                    }
                   });
                 },
                 icon: const Icon(
